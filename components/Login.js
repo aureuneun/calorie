@@ -5,13 +5,12 @@ import {
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
-import { isLoggedInState, userState } from "../atoms";
+import { userState } from "../atoms";
 import { auth } from "../firebase";
 import FormError from "./FormError";
 
 const Login = () => {
   const setUser = useSetRecoilState(userState);
-  const setIsLoggedIn = useSetRecoilState(isLoggedInState);
   const [newAccount, setNewAccount] = useState(false);
   const [error, setError] = useState("");
   const {
@@ -21,17 +20,24 @@ const Login = () => {
   } = useForm();
   const onValid = async (data) => {
     const { email, password } = data;
-    let user;
+    let userCredential;
     try {
       if (newAccount) {
-        user = await createUserWithEmailAndPassword(auth, email, password);
+        userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
       } else {
-        user = await signInWithEmailAndPassword(auth, email, password);
+        userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
       }
       console.log("Login User");
-      console.log(user.user);
-      // setUser(user.user);
-      setIsLoggedIn(true);
+      console.log(userCredential.user);
+      // setUser(userCredential.user);
     } catch (e) {
       console.log(e.code);
       setError(e.code);
