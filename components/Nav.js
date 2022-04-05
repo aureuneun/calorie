@@ -32,7 +32,7 @@ const Nav = () => {
   }, []);
 
   return (
-    <nav className="flex justify-around py-5 mb-20">
+    <nav className="flex justify-around py-5 mb-10">
       <Link href={"/"}>
         <a className="hover:text-sky-400">Home</a>
       </Link>

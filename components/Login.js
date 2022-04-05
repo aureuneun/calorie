@@ -45,15 +45,16 @@ const Login = () => {
   };
   return (
     <>
-      <form onSubmit={handleSubmit(onValid)} className="flex flex-col mb-14">
+      <form onSubmit={handleSubmit(onValid)} className="flex flex-col mb-6">
         <input
+          className="mb-6"
           type="text"
           placeholder="Email"
           {...register("email", {
             required: "email is required.",
             pattern: {
               value:
-                /^(([^&lt;&gt;()\[\]\\.,;:\s@"]+(\.[^&lt;&gt;()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g,
               message: "wrong format.",
             },
           })}
@@ -74,6 +75,7 @@ const Login = () => {
         <button>{newAccount ? "Sign up" : "Sign in"}</button>
         {error && <FormError message={error} />}
       </form>
+      <hr />
       <button onClick={() => setNewAccount((prev) => !prev)}>
         {newAccount ? "Sign in" : "Create a new account"}
       </button>

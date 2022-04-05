@@ -24,7 +24,7 @@ const Calculate = () => {
     let fatNutrient;
 
     const q = query(
-      collection(db, "rate"),
+      collection(db, "nutrientratio"),
       where("gender", "==", gender),
       where("type", "==", type)
     );
@@ -35,14 +35,15 @@ const Calculate = () => {
         doc.data().carbohydrate,
         doc.data().protein,
         doc.data().fat,
-        doc.data().calorie
+        doc.data().purpose
       );
       console.log("==========================================");
-      carbohydrateCalorie =
-        ((bmr + spend - doc.data().calorie) * doc.data().carbohydrate) / 100;
-      proteinCalorie =
-        ((bmr + spend - doc.data().calorie) * doc.data().protein) / 100;
-      fatCalorie = ((bmr + spend - doc.data().calorie) * doc.data().fat) / 100;
+      const active = (bmr * spend) / 100;
+      const burned = ((bmr + active) * doc.data().purpose) / 100;
+      const intake = bmr + active + burned;
+      carbohydrateCalorie = (intake * doc.data().carbohydrate) / 100;
+      proteinCalorie = (intake * doc.data().protein) / 100;
+      fatCalorie = (intake * doc.data().fat) / 100;
       console.log(carbohydrateCalorie);
       console.log(proteinCalorie);
       console.log(fatCalorie);
@@ -81,7 +82,7 @@ const Calculate = () => {
         className="flex flex-col mb-14 mt-10"
       >
         <select {...register("gender")}>
-          <option value="none">성별</option>
+          <option value="none">Gender (성별)</option>
           <option value="male">남성</option>
           <option value="female">여성</option>
         </select>
@@ -149,18 +150,19 @@ const Calculate = () => {
         />
         {errors.weight && <FormError message={errors.weight.message} />}
         <select {...register("type")}>
-          <option value="none">방식</option>
+          <option value="none">Purpose (목적)</option>
+          <option value="extreme">극한의 다이어트</option>
           <option value="diet">다이어트</option>
           <option value="leanmassup">린매스업</option>
           <option value="bulkup">벌크업</option>
         </select>
         <select {...register("spend", { valueAsNumber: true })}>
-          <option value={0}>소모칼로리</option>
-          <option value={-300}>사무직</option>
-          <option value={-450}>활동량이 많은 업무</option>
-          <option value={-650}>사무직 (퇴근 후 운동)</option>
-          <option value={-750}>활동량이 많은 업무(퇴근후 운동)</option>
-          <option value={-850}>활동량이 많은 업무(퇴근 후 격한운동)</option>
+          <option value={0}>Activity (소모칼로리)</option>
+          <option value={25}>사무직</option>
+          <option value={40}>활동량이 많은 업무</option>
+          <option value={65}>사무직 (퇴근 후 운동)</option>
+          <option value={85}>활동량이 많은 업무(퇴근후 운동)</option>
+          <option value={100}>활동량이 많은 업무(퇴근 후 격한운동)</option>
         </select>
         <button>Submit</button>
       </form>
